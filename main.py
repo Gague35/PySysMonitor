@@ -91,7 +91,7 @@ def status():
     # Memory 
     ram = psutil.virtual_memory()
     ram_bar = make_bar(ram.percent)
-    print(f"RAM       : {ram_bar} {color_use(ram.percent)}")
+    print(f"RAM       : {ram_bar} {color_use(ram.percent)} {ram.used // 1024**2} MB / {ram.total // 1024**2} MB")
     
     swram = psutil.swap_memory()
     print(f'Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)')
