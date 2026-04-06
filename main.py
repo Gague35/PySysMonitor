@@ -42,23 +42,26 @@ def get_top_proc():
 
     psutil.cpu_percent(interval=None) 
     
-    for proc in psutil.process_iter(['name', 'cpu_percent']):
+    for proc in psutil.process_iter(['name', 'cpu_percent', 'memory_info']):
         try:
             cpu = proc.info['cpu_percent']
             name = proc.info['name']
-            
+            ramMB = proc.info['memory_info'].rss // 1024**2
+
             if name == "System Idle Process" or name is None:
                 continue
                 
             processes.append({
                 'name': name, 
-                'cpu': round(cpu / cores, 2)
+                'cpu': round(cpu / cores, 2),
+                'ram': ramMB
             })
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
 
-    top3 = sorted(processes, key=lambda x: x['cpu'], reverse=True)[:3]
-    return top3
+    top3_cpu = sorted(processes, key=lambda x: x['cpu'], reverse=True)[:3]
+    top3_ram = sorted(processes, key=lambda x: x['ram'], reverse=True)[:3]
+    return top3_cpu, top3_ram
 
 # Main function
 def status():
@@ -78,7 +81,10 @@ def status():
 
     # Memory 
     ram = psutil.virtual_memory()
-    print(f"RAM : {color_use(ram.percent)} ({ram.used // 1024**2} Mo / {ram.total // 1024**2} Mo)")
+    print(f"RAM : {color_use(ram.percent)} ({ram.used // 1024**2} MB / {ram.total // 1024**2} MB)")
+    
+    swram = psutil.swap_memory()
+    print(f'Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)')
 
 
     # GPU
@@ -117,13 +123,23 @@ def status():
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
     print(f"Upload speed : {spd_upld / (1024):.2f} kB/s")
     
-    # Top Processes
-    print("--- Top 3 Processes ---")
-    top_list = get_top_proc()
-    
-    for p in top_list:
-        print(f"{p['name'][:20]:<20} : {color_use(p['cpu'])}")
+    # Inside status()
+    cpu_list, ram_list = get_top_proc()
 
+    print(f"{'--- TOP CPU ---':<30} | {'--- TOP RAM ---':<30}")
+
+    # Iterate through both lists using zip
+    for c, r in zip(cpu_list, ram_list):
+        cpu_name = c['name'][:15].ljust(15)
+        cpu_val = color_use(c['cpu'])
+        left_col = f"{cpu_name} : {cpu_val}"
+
+        ram_name = r['name'][:15].ljust(15)
+        ram_val = f"{r['ram']} Mo"
+        right_col = f"{ram_name} : {ram_val}"
+
+        print(f"{left_col:<40} | {right_col}")
+        
     print("=====================")
 
 try:
