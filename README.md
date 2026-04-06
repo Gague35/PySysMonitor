@@ -12,18 +12,22 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 ## 🛠️ Installation
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Gague35/PySysMonitor.git
+    ```bash
+    git clone https://github.com/Gague35/PySysMonitor.git
+    ```
 
 2. **Install the required dependencies**:
     ```bash
     pip install psutil gputil colorama distutils
+    ```
 
 ## 🚀 How to Use
 
-**Simply run the main script**:
-    ```bash
-    python main.py
+Simply run the main script:
+
+```bash
+python main.py
+```
 
 *To exit the monitor, press Ctrl + C in your terminal.*
 
