@@ -21,7 +21,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 
 ## 🚀 How to Use
 
-Simply run the main script:
+**Simply run the main script**:
     ```bash
     python main.py
 
