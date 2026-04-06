@@ -17,14 +17,15 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 
 2. **Install the required dependencies**:
     ```bash
-    pip install psutil gputil colorama
+    pip install psutil gputil colorama distutils
 
 ## 🚀 How to Use
 
 Simply run the main script:
     ```bash
     python main.py
-***To exit the monitor, press Ctrl + C in your terminal.***
+
+*To exit the monitor, press Ctrl + C in your terminal.*
 
 ## 📅 Roadmap (Future Updates)
 - [ ] **Advanced Hardware Data**: CPU per-core temperatures and fan speeds.
