@@ -36,6 +36,14 @@ def color_disk(text, percent):
         color = Fore.CYAN
     return f"{color}{text}" + Fore.RESET
 
+# Bars
+def make_bar(percent, length=20):
+    filled_length = int(length * percent // 100)
+    
+    bar = '█' * filled_length + '-' * (length - filled_length)
+    
+    return f"[{bar}]"
+
 # Processes fuction
 def get_top_proc():
     processes = []
@@ -77,11 +85,13 @@ def status():
 
     # CPU
     cpusage = psutil.cpu_percent()
-    print(f"CPU Usage : {color_use(cpusage)}")
+    cpu_bar = make_bar(cpusage)
+    print(f"CPU Usage : {cpu_bar} {color_use(cpusage)}")
 
     # Memory 
     ram = psutil.virtual_memory()
-    print(f"RAM : {color_use(ram.percent)} ({ram.used // 1024**2} MB / {ram.total // 1024**2} MB)")
+    ram_bar = make_bar(ram.percent)
+    print(f"RAM       : {ram_bar} {color_use(ram.percent)}")
     
     swram = psutil.swap_memory()
     print(f'Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)')
