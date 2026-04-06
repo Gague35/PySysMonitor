@@ -1,5 +1,7 @@
 # 🚀 PySysMonitor
 
+![Screenshot](Screenshots/Exmple.png)
+
 A lightweight, real-time system resource monitor built with Python. This tool provides instant visibility into your machine's performance directly from your terminal with dynamic color-coding.
 
 ## 📊 Features
