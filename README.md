@@ -1,4 +1,4 @@
-# 🚀 PySystemMonitor
+# 🚀 PySysMonitor
 
 A lightweight, real-time system resource monitor built with Python. This tool provides instant visibility into your machine's performance directly from your terminal with dynamic color-coding.
 
@@ -13,7 +13,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 
 1. **Clone the repository**:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/PySystemMonitor.git](https://github.com/YOUR_USERNAME/PySystemMonitor.git)
+   git clone https://github.com/Gague35/PySysMonitor.git
 
 2. **Install the required dependencies**:
     ```bash
