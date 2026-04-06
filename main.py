@@ -7,6 +7,9 @@ from colorama import Fore
 last_recv = psutil.net_io_counters().bytes_recv
 last_sent = psutil.net_io_counters().bytes_sent
 
+cores = psutil.cpu_count()
+
+# Color functions
 def color_use(value):
     if value > 80:
         color = Fore.RED
@@ -32,6 +35,31 @@ def color_disk(text, percent):
         color = Fore.CYAN
     return f"{color}{text}" + Fore.RESET
 
+# Processes fuction
+def get_top_proc():
+    processes = []
+
+    psutil.cpu_percent(interval=None) 
+    
+    for proc in psutil.process_iter(['name', 'cpu_percent']):
+        try:
+            cpu = proc.info['cpu_percent']
+            name = proc.info['name']
+            
+            if name == "System Idle Process" or name is None:
+                continue
+                
+            processes.append({
+                'name': name, 
+                'cpu': round(cpu / cores, 2)
+            })
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    top3 = sorted(processes, key=lambda x: x['cpu'], reverse=True)[:3]
+    return top3
+
+# Main function
 def status():
     global last_recv, last_sent
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -83,11 +111,18 @@ def status():
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
     print(f"Upload speed : {spd_upld / (1024):.2f} kB/s")
     
+# Top Processes
+    print("--- Top 3 Processes ---")
+    top_list = get_top_proc()
+    
+    for p in top_list:
+        print(f"{p['name'][:20]:<20} : {color_use(p['cpu'])}")
+
     print("=====================")
 
 try:
     while True:
         status()
-        time.sleep(0.5)
+        time.sleep(1)
 except KeyboardInterrupt:
     print("\nExiting...")

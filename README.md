@@ -8,6 +8,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 * **GPU Tracking**: Automatic detection of NVIDIA graphics cards, showing both load and temperature.
 * **Disk Analysis**: Dynamic monitoring of all detected partitions (C:, D:, F:, etc.) with free and used space and dynamic color (Cyan/Red)
 * **Network Traffic**: Live calculation of Download and Upload speeds in kB/s.
+* **Process Tracking**: Displaying the "Top 3" most resource-hungry applications.
 
 ## 🛠️ Installation
 
@@ -33,7 +34,6 @@ python main.py
 
 ## 📅 Roadmap (Future Updates)
 - [ ] **Advanced Hardware Data**: CPU per-core temperatures and fan speeds.
-- [ ] **Process Tracking**: Displaying the "Top 3" most resource-hungry applications.
 - [ ] **Session History**: Tracking peak (Max/Min) values during the monitoring session.
 - [ ] **Dedicated GUI**: Transitioning from a CLI to a full standalone desktop application.
 
