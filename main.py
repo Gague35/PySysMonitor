@@ -2,6 +2,7 @@ import psutil
 import GPUtil
 import os
 import time
+import datetime
 from colorama import Fore
 
 last_recv = psutil.net_io_counters().bytes_recv
@@ -64,7 +65,12 @@ def status():
     global last_recv, last_sent
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    print("=== SYSTEM STATUS ===")
+    print(f"=== SYSTEM STATUS ===")
+
+    # Uptime
+    boot_time = psutil.boot_time()
+    uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
+    print(f"Uptime : {str(uptime).split('.')[0]}")
 
     # CPU
     cpusage = psutil.cpu_percent()
@@ -111,7 +117,7 @@ def status():
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
     print(f"Upload speed : {spd_upld / (1024):.2f} kB/s")
     
-# Top Processes
+    # Top Processes
     print("--- Top 3 Processes ---")
     top_list = get_top_proc()
     
