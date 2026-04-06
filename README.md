@@ -6,7 +6,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 * **CPU Monitoring**: Real-time load percentage with dynamic color-coding (Green/Yellow/Red).
 * **Memory (RAM)**: Track usage percentages and precise data (Used vs. Total in MB).
 * **GPU Tracking**: Automatic detection of NVIDIA graphics cards, showing both load and temperature.
-* **Disk Analysis**: Dynamic monitoring of all detected partitions (C:, D:, F:, etc.) with free and used space.
+* **Disk Analysis**: Dynamic monitoring of all detected partitions (C:, D:, F:, etc.) with free and used space and dynamic color (Cyan/Red)
 * **Network Traffic**: Live calculation of Download and Upload speeds in kB/s.
 
 ## 🛠️ Installation
