@@ -13,6 +13,7 @@ last_recv = psutil.net_io_counters().bytes_recv
 last_sent = psutil.net_io_counters().bytes_sent
 
 get_os = platform.system()
+get_os_ver = (f'{platform.release()} | Version: {platform.version()}')
 cores = psutil.cpu_count()
 cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
 
@@ -113,10 +114,11 @@ def status():
     global last_recv, last_sent
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    print(f"{Fore.BLUE}==={Fore.RESET} {Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
+    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
     print('')
 
     print(f"Machine name: {platform.node()}")
+    print(f"Os : {get_os} {get_os_ver}")
     # Uptime
     boot_time = psutil.boot_time()
     uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
