@@ -2,6 +2,7 @@ import psutil
 import GPUtil
 import os
 import platform
+import cpuinfo
 import time
 import datetime
 from colorama import Fore
@@ -12,6 +13,7 @@ last_sent = psutil.net_io_counters().bytes_sent
 
 get_os = platform.system()
 cores = psutil.cpu_count()
+cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
 
 # Color functions
 def color_use(value):
@@ -95,6 +97,7 @@ def status():
     print(f"{Fore.BLUE}==={Fore.RESET} {Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
     print('')
 
+    print(f"Machine name: {platform.node()}")
     # Uptime
     boot_time = psutil.boot_time()
     uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
@@ -103,16 +106,22 @@ def status():
     print('')
     print(Fore.BLUE + "---CPU---" + Fore.RESET)
     # CPU
+    print(f"CPU       : {cpu_name}")
+
     cpusage = psutil.cpu_percent()
     cpu_bar = make_bar(cpusage)
     print(f"CPU Usage : {cpu_bar} {color_use(cpusage)}")
+
+    cpu_freq = psutil.cpu_freq().current / 1000
+    print(f"CPU Freq  : {cpu_freq:.1f} GHz")
+
     temp = get_cpu_temp()
     if temp is not None:
-        print(f"CPU Temp : {color_temp(temp)}")
+        print(f"CPU Temp  : {color_temp(temp)}")
     elif get_os == 'Windows':
-        print(f"CPU Temp : {Fore.YELLOW}N/A (Windows){Fore.RESET}")
+        print(f"CPU Temp  : {Fore.YELLOW}N/A (Windows){Fore.RESET}")
     else:
-        print("CPU Temp : N/A")
+        print("CPU Temp  : N/A")
 
     print('')
     print(Fore.BLUE + "---RAM---" + Fore.RESET)
@@ -122,7 +131,7 @@ def status():
     print(f"RAM Usage : {ram_bar} {color_use(ram.percent)} {ram.used // 1024**2} MB / {ram.total // 1024**2} MB")
     
     swram = psutil.swap_memory()
-    print(f"Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)")
+    print(f"SWAP RAM  : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)")
 
     print('')
     print(Fore.BLUE + "---GPU---" + Fore.RESET)
@@ -132,8 +141,16 @@ def status():
         print(Fore.RED + "GPU: No GPU detected")
     else:
         for gpu in gpus:
-            print(f"GPU ({gpu.name}) : {color_use(gpu.load*100)} | Temp : {color_temp(gpu.temperature)}")
-    
+            print(f"GPU : {gpu.name}")
+            gpu_use = gpu.load*100
+            gpu_bar = make_bar(gpu_use)
+            print(f"GPU Usage : {gpu_bar} {color_use(gpu_use)}")
+            print(f"GPU Temp  : {color_temp(gpu.temperature)}")
+            # VRAM
+            vram_percent = round((gpu.memoryUsed / gpu.memoryTotal) * 100, 1)
+            vram_bar = make_bar(vram_percent)
+            print(f"VRAM Usage: {vram_bar} {color_use(vram_percent)} {gpu.memoryUsed:.0f} MB / {gpu.memoryTotal:.0f} MB")
+
     print('')
     print(Fore.BLUE + "---DISKS---" + Fore.RESET)
     # Disk
@@ -160,7 +177,7 @@ def status():
     last_recv = actual.bytes_recv
     last_sent = actual.bytes_sent
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
-    print(f"Upload speed : {spd_upld / (1024):.2f} kB/s")
+    print(f"Upload speed   : {spd_upld / (1024):.2f} kB/s")
 
     print("")
     print(Fore.BLUE + "---TOP Processes---" + Fore.RESET)
@@ -172,9 +189,9 @@ def status():
 
     # Iterate through both lists using zip
     for c, r in zip(cpu_list, ram_list):
-        cpu_name = c['name'][:15].ljust(15)
+        cpu_proc = c['name'][:15].ljust(15)
         cpu_val = color_use(c['cpu'])
-        left_col = f"{cpu_name} : {cpu_val}"
+        left_col = f"{cpu_proc} : {cpu_val}"
 
         ram_name = r['name'][:15].ljust(15)
         ram_val = f"{r['ram']} Mo"
