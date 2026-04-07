@@ -36,7 +36,6 @@ python main.py
 *To exit the monitor, press Ctrl + C in your terminal.*
 
 ## 📅 Roadmap (Future Updates)
-- [ ] **Session History**: Tracking peak (Max/Min) values during the monitoring session.
 - [ ] **Dedicated GUI**: Transitioning from a CLI to a full standalone desktop application.
 
 ## 📚 Libraries Used
