@@ -1,13 +1,19 @@
 import psutil
 import GPUtil
 import os
+import platform
 import time
 import datetime
 from colorama import Fore
+try:
+    import wmi
+except ImportError:
+    wmi = None
 
 last_recv = psutil.net_io_counters().bytes_recv
 last_sent = psutil.net_io_counters().bytes_sent
 
+get_os = platform.system()
 cores = psutil.cpu_count()
 
 # Color functions
@@ -43,6 +49,27 @@ def make_bar(percent, length=20):
     bar = '█' * filled_length + '-' * (length - filled_length)
     
     return f"[{bar}]"
+
+# CPU Temperature
+def get_cpu_temp():
+    if get_os == 'Windows':
+        if wmi is None:
+            return None
+        try:
+            wmi_obj = wmi.WMI()
+            res = wmi_obj.query("SELECT * FROM MSAcpi_ThermalZoneTemperature")
+            value = res[0].CurrentTemperature
+            return round((value / 10) - 273.15, 1)
+        except Exception:
+            return None
+    elif get_os == 'Linux':
+        data = psutil.sensors_temperatures()
+        if not data:
+            return None
+        measures = next(iter(data.values()))
+        return measures[0].current
+    else:
+        return None
 
 # Processes fuction
 def get_top_proc():
@@ -87,6 +114,11 @@ def status():
     cpusage = psutil.cpu_percent()
     cpu_bar = make_bar(cpusage)
     print(f"CPU Usage : {cpu_bar} {color_use(cpusage)}")
+    temp = get_cpu_temp()
+    if temp is not None:
+        print(f"CPU Temp : {color_temp(temp)}")
+    else:
+        print("CPU Temp : N/A")
 
     # Memory 
     ram = psutil.virtual_memory()
@@ -94,7 +126,7 @@ def status():
     print(f"RAM       : {ram_bar} {color_use(ram.percent)} {ram.used // 1024**2} MB / {ram.total // 1024**2} MB")
     
     swram = psutil.swap_memory()
-    print(f'Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)')
+    print(f"Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)")
 
 
     # GPU

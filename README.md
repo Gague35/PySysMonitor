@@ -21,7 +21,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 
 2. **Install the required dependencies**:
     ```bash
-    pip install psutil gputil colorama distutils
+    pip install psutil gputil colorama distutils wmi
     ```
 
 ## 🚀 How to Use
