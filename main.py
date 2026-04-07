@@ -5,10 +5,7 @@ import platform
 import time
 import datetime
 from colorama import Fore
-try:
-    import wmi
-except ImportError:
-    wmi = None
+
 
 last_recv = psutil.net_io_counters().bytes_recv
 last_sent = psutil.net_io_counters().bytes_sent
@@ -53,15 +50,7 @@ def make_bar(percent, length=20):
 # CPU Temperature
 def get_cpu_temp():
     if get_os == 'Windows':
-        if wmi is None:
-            return None
-        try:
-            wmi_obj = wmi.WMI()
-            res = wmi_obj.query("SELECT * FROM MSAcpi_ThermalZoneTemperature")
-            value = res[0].CurrentTemperature
-            return round((value / 10) - 273.15, 1)
-        except Exception:
-            return None
+        return None
     elif get_os == 'Linux':
         data = psutil.sensors_temperatures()
         if not data:
@@ -103,13 +92,16 @@ def status():
     global last_recv, last_sent
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    print(f"=== SYSTEM STATUS ===")
+    print(f"{Fore.BLUE}==={Fore.RESET} {Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
+    print('')
 
     # Uptime
     boot_time = psutil.boot_time()
     uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
     print(f"Uptime : {str(uptime).split('.')[0]}")
-
+    
+    print('')
+    print(Fore.BLUE + "---CPU---" + Fore.RESET)
     # CPU
     cpusage = psutil.cpu_percent()
     cpu_bar = make_bar(cpusage)
@@ -117,18 +109,23 @@ def status():
     temp = get_cpu_temp()
     if temp is not None:
         print(f"CPU Temp : {color_temp(temp)}")
+    elif get_os == 'Windows':
+        print(f"CPU Temp : {Fore.YELLOW}N/A (Windows){Fore.RESET}")
     else:
         print("CPU Temp : N/A")
 
+    print('')
+    print(Fore.BLUE + "---RAM---" + Fore.RESET)
     # Memory 
     ram = psutil.virtual_memory()
     ram_bar = make_bar(ram.percent)
-    print(f"RAM       : {ram_bar} {color_use(ram.percent)} {ram.used // 1024**2} MB / {ram.total // 1024**2} MB")
+    print(f"RAM Usage : {ram_bar} {color_use(ram.percent)} {ram.used // 1024**2} MB / {ram.total // 1024**2} MB")
     
     swram = psutil.swap_memory()
     print(f"Virtual RAM : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)")
 
-
+    print('')
+    print(Fore.BLUE + "---GPU---" + Fore.RESET)
     # GPU
     gpus = GPUtil.getGPUs()
     if not gpus:
@@ -138,7 +135,7 @@ def status():
             print(f"GPU ({gpu.name}) : {color_use(gpu.load*100)} | Temp : {color_temp(gpu.temperature)}")
     
     print('')
-
+    print(Fore.BLUE + "---DISKS---" + Fore.RESET)
     # Disk
     partitions = psutil.disk_partitions()
     for p in partitions:
@@ -155,7 +152,7 @@ def status():
             continue
 
     print('')
-
+    print(Fore.BLUE + "---Network---" + Fore.RESET)
     # Network
     actual = psutil.net_io_counters()
     spd_dwnld = actual.bytes_recv - last_recv
@@ -164,6 +161,9 @@ def status():
     last_sent = actual.bytes_sent
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
     print(f"Upload speed : {spd_upld / (1024):.2f} kB/s")
+
+    print("")
+    print(Fore.BLUE + "---TOP Processes---" + Fore.RESET)
     
     # Inside status()
     cpu_list, ram_list = get_top_proc()
@@ -182,7 +182,7 @@ def status():
 
         print(f"{left_col:<40} | {right_col}")
         
-    print("=====================")
+   # print("=====================")
 
 try:
     while True:

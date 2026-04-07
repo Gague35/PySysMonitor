@@ -11,6 +11,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 * **Disk Analysis**: Dynamic monitoring of all detected partitions (C:, D:, F:, etc.) with free and used space and dynamic color (Cyan/Red)
 * **Network Traffic**: Live calculation of Download and Upload speeds in kB/s.
 * **Process Tracking**: Displaying the "Top 3" most resource-hungry applications.
+* **Advanced Hardware Data**: CPU per-core temperatures. ***(Only on Linux because Windows won't let python libraries access to these infos)***
 
 ## 🛠️ Installation
 
@@ -35,7 +36,6 @@ python main.py
 *To exit the monitor, press Ctrl + C in your terminal.*
 
 ## 📅 Roadmap (Future Updates)
-- [ ] **Advanced Hardware Data**: CPU per-core temperatures and fan speeds.
 - [ ] **Session History**: Tracking peak (Max/Min) values during the monitoring session.
 - [ ] **Dedicated GUI**: Transitioning from a CLI to a full standalone desktop application.
 
