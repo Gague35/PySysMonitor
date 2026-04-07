@@ -11,7 +11,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 * **Disk Analysis**: Dynamic monitoring of all detected partitions (C:, D:, F:, etc.) with free and used space and dynamic color (Cyan/Red)
 * **Network Traffic**: Live calculation of Download and Upload speeds in kB/s.
 * **Process Tracking**: Displaying the "Top 3" most resource-hungry applications.
-* **Advanced Hardware Data**: CPU per-core temperatures. ***(Only on Linux because Windows won't let python libraries access to these infos)***
+* **Advanced Hardware Data**: CPU temperature. ***(Only on Linux because Windows won't let python libraries access to these infos)***
 
 ## 🛠️ Installation
 
@@ -22,7 +22,7 @@ A lightweight, real-time system resource monitor built with Python. This tool pr
 
 2. **Install the required dependencies**:
     ```bash
-    pip install psutil gputil colorama distutils wmi
+    pip install psutil gputil colorama distutils subprocess cpuinfo
     ```
 
 ## 🚀 How to Use

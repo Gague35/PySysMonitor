@@ -1,6 +1,7 @@
 import psutil
 import GPUtil
 import os
+import subprocess
 import platform
 import cpuinfo
 import time
@@ -14,6 +15,24 @@ last_sent = psutil.net_io_counters().bytes_sent
 get_os = platform.system()
 cores = psutil.cpu_count()
 cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
+
+def ping():
+    if get_os == 'Windows':
+        ping_res = subprocess.run(["ping", "-n", "1", "8.8.8.8"], capture_output=True, text=True, encoding="cp850")
+    elif get_os == 'Linux':
+        ping_res = subprocess.run(["ping", "-c", "1", "8.8.8.8"], capture_output=True, text=True)
+    else:
+        return "N/A"
+
+    txt = ping_res.stdout
+
+    for line in txt.splitlines():
+        # Fr/En
+        if "Moyenne =" in line or "Average =" in line:
+            fig = line.split("=")[-1].replace("ms", "").strip()
+            return fig
+
+    return "Error"
 
 # Color functions
 def color_use(value):
@@ -60,7 +79,7 @@ def get_cpu_temp():
         measures = next(iter(data.values()))
         return measures[0].current
     else:
-        return None
+        return "N/A"
 
 # Processes fuction
 def get_top_proc():
@@ -105,6 +124,7 @@ def status():
     
     print('')
     print(Fore.BLUE + "---CPU---" + Fore.RESET)
+
     # CPU
     print(f"CPU       : {cpu_name}")
 
@@ -135,13 +155,14 @@ def status():
 
     print('')
     print(Fore.BLUE + "---GPU---" + Fore.RESET)
+
     # GPU
     gpus = GPUtil.getGPUs()
     if not gpus:
         print(Fore.RED + "GPU: No GPU detected")
     else:
         for gpu in gpus:
-            print(f"GPU : {gpu.name}")
+            print(f"GPU       : {gpu.name}")
             gpu_use = gpu.load*100
             gpu_bar = make_bar(gpu_use)
             print(f"GPU Usage : {gpu_bar} {color_use(gpu_use)}")
@@ -153,6 +174,7 @@ def status():
 
     print('')
     print(Fore.BLUE + "---DISKS---" + Fore.RESET)
+
     # Disk
     partitions = psutil.disk_partitions()
     for p in partitions:
@@ -170,6 +192,7 @@ def status():
 
     print('')
     print(Fore.BLUE + "---Network---" + Fore.RESET)
+
     # Network
     actual = psutil.net_io_counters()
     spd_dwnld = actual.bytes_recv - last_recv
@@ -178,6 +201,10 @@ def status():
     last_sent = actual.bytes_sent
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
     print(f"Upload speed   : {spd_upld / (1024):.2f} kB/s")
+    ping_net = ping()
+    print(f"Ping           : {ping_net} ms")
+
+
 
     print("")
     print(Fore.BLUE + "---TOP Processes---" + Fore.RESET)
