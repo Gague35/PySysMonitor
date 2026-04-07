@@ -1,8 +1,12 @@
 # 🚀 PySysMonitor
 
-![Screenshot](Screenshots/Exemple.png)
-
 A lightweight, real-time system resource monitor built with Python. This tool provides instant visibility into your machine's performance directly from your terminal with dynamic color-coding.
+
+WINDOWS
+![Screenshot](Screenshots/Exemple_win.png)
+
+LINUX (some bugs to fix but it's a preview)
+![Screenshot](Screenshots/Exemple_lnx.png)
 
 ## 📊 Features
 * **CPU Monitoring**: Real-time load percentage with dynamic color-coding (Green/Yellow/Red).
