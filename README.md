@@ -9,7 +9,7 @@ A lightweight, real-time system resource monitor built in Python, displayed dire
 
 | Windows | Linux |
 |---|---|
-| ![Windows](Screenshots/Exemple_WIN.png) | ![Linux](Screenshots/Exemple_LNX.png) |
+| ![Windows](Screenshots/Exemple_win.png) | ![Linux](Screenshots/Exemple_lnx.png) |
 
 > ⚠️ Linux support is functional but may have minor bugs. Contributions welcome!
 
