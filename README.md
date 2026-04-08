@@ -90,6 +90,7 @@ Press `Ctrl+C` to exit.
 ## 📅 Roadmap
 
 - [x] v1 — CLI monitor
+- [ ] v1.5 - Support for AMD GPUs (and attempt at macOS support) and many other features
 - [ ] v2 — Dedicated GUI application
 
 ## 📄 License
