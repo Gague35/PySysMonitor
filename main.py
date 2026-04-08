@@ -202,7 +202,7 @@ def status():
             continue
 
     print('')
-    print(Fore.BLUE + "---Network---" + Fore.RESET)
+    print(Fore.BLUE + "---NETWORK---" + Fore.RESET)
 
     # Network
     actual = psutil.net_io_counters()
@@ -218,7 +218,7 @@ def status():
 
 
     print("")
-    print(Fore.BLUE + "---TOP Processes---" + Fore.RESET)
+    print(Fore.BLUE + "---TOP PROCESSES---" + Fore.RESET)
     
     # Inside status()
     cpu_list, ram_list = get_top_proc()

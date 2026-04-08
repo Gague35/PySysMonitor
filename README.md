@@ -1,50 +1,88 @@
-# 🚀 PySysMonitor
+# 🖥️ PySysMonitor
 
-A lightweight, real-time system resource monitor built with Python. This tool provides instant visibility into your machine's performance directly from your terminal with dynamic color-coding.
+A lightweight, real-time system resource monitor built in Python, displayed directly in your terminal with dynamic color-coding.
 
-WINDOWS
+| Windows | Linux |
+|---|---|
+| ![Windows](Screenshots/Exemple_win.png) | ![Linux](Screenshots/Exemple_lnx.png) |
 
-![Screenshot](Screenshots/Exemple_win.png)
+> ⚠️ Linux support is functional but may have minor bugs. Contributions welcome!
 
-LINUX (some bugs to fix but it's a preview)
-
-![Screenshot](Screenshots/Exemple_lnx.png)
+---
 
 ## 📊 Features
-* **CPU Monitoring**: Real-time load percentage with dynamic color-coding (Green/Yellow/Red).
-* **Memory (RAM)**: Track usage percentages and precise data (Used vs. Total in MB).
-* **GPU Tracking**: Automatic detection of NVIDIA graphics cards, showing both load and temperature.
-* **Disk Analysis**: Dynamic monitoring of all detected partitions (C:, D:, F:, etc.) with free and used space and dynamic color (Cyan/Red)
-* **Network Traffic**: Live calculation of Download and Upload speeds in kB/s.
-* **Process Tracking**: Displaying the "Top 3" most resource-hungry applications.
-* **Advanced Hardware Data**: CPU temperature. ***(Only on Linux because Windows won't let python libraries access to these infos)***
+
+- **System Info** — Machine name, OS, uptime
+- **CPU** — Name, usage, frequency
+- **RAM** — Physical and SWAP usage with progress bars
+- **GPU** — Usage, temperature and VRAM (NVIDIA only via GPUtil)
+- **Disks** — All detected partitions with free/used space
+- **Network** — Live download/upload speeds and ping
+- **Top Processes** — Top 3 apps by CPU and RAM usage (grouped by application)
+- **CPU Temperature** — Linux only *(Windows blocks access to hardware sensors from Python)*
+
+---
 
 ## 🛠️ Installation
 
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/Gague35/PySysMonitor.git
-    ```
+### Windows
 
-2. **Install the required dependencies**:
-    ```bash
-    pip install psutil gputil colorama distutils subprocess cpuinfo
-    ```
+```bash
+git clone https://github.com/Gague35/PySysMonitor.git
+cd PySysMonitor
+pip install psutil gputil colorama py-cpuinfo
+```
 
-## 🚀 How to Use
+### Linux (Ubuntu/Debian)
 
-Simply run the main script:
+```bash
+git clone https://github.com/Gague35/PySysMonitor.git
+cd PySysMonitor
+pip install psutil gputil colorama py-cpuinfo
+```
+
+### Linux (Arch/Manjaro)
+
+> ⚠️ `pip` is blocked system-wide on Arch-based distros. Use `pacman` instead :
+
+```bash
+sudo pacman -S python-psutil python-colorama
+pip install gputil py-cpuinfo --break-system-packages
+```
+
+---
+
+## 🚀 Usage
 
 ```bash
 python main.py
 ```
 
-*To exit the monitor, press Ctrl + C in your terminal.*
+Press `Ctrl+C` to exit.
 
-## 📅 Roadmap (Future Updates)
-- [ ] **Dedicated GUI**: Transitioning from a CLI to a full standalone desktop application.
+---
 
-## 📚 Libraries Used
-* **[psutil](https://github.com/giampaolo/psutil)**: Used for retrieving information on running processes and system utilization (CPU, memory, disks, network).
-* **[GPUtil](https://github.com/anderskm/gputil)**: A Python module for getting the GPU status from NVIDIA GPUs using nvidia-smi.
-* **[colorama](https://github.com/tartley/colorama)**: Simple cross-platform colored terminal text in Python.
+## ⚠️ Known Limitations
+
+| Feature | Windows | Linux |
+|---|---|---|
+| CPU Temperature | ❌ Not available | ✅ |
+| GPU Monitoring | ✅ NVIDIA only | ✅ NVIDIA only |
+
+---
+
+## 📚 Dependencies
+
+| Library | Usage |
+|---|---|
+| [psutil](https://github.com/giampaolo/psutil) | CPU, RAM, disk, network, processes |
+| [GPUtil](https://github.com/anderskm/gputil) | GPU monitoring (NVIDIA) |
+| [colorama](https://github.com/tartley/colorama) | Terminal colors |
+| [py-cpuinfo](https://github.com/workhorsy/py-cpuinfo) | CPU name detection |
+
+---
+
+## 📅 Roadmap
+
+- [x] v1 — CLI monitor
+- [ ] v2 — Dedicated GUI application
