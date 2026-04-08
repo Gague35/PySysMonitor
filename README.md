@@ -1,3 +1,8 @@
+![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Version](https://img.shields.io/badge/Version-1.0-orange)
+
 # 🖥️ PySysMonitor
 
 A lightweight, real-time system resource monitor built in Python, displayed directly in your terminal with dynamic color-coding.
@@ -86,3 +91,6 @@ Press `Ctrl+C` to exit.
 
 - [x] v1 — CLI monitor
 - [ ] v2 — Dedicated GUI application
+
+## 📄 License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
