@@ -3,19 +3,14 @@ import GPUtil
 import os
 import subprocess
 import platform
-import cpuinfo
 import time
 import datetime
 from colorama import Fore
+from core.cpu import get_cpu_temp, get_cpu_usage, get_cpu_freq, cpu_name, get_os, get_os_ver, cores
 
 
 last_recv = psutil.net_io_counters().bytes_recv
 last_sent = psutil.net_io_counters().bytes_sent
-
-get_os = platform.system()
-get_os_ver = (f'{platform.release()} | Version: {platform.version()}')
-cores = psutil.cpu_count()
-cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
 
 def ping():
     if get_os == 'Windows':
@@ -68,19 +63,6 @@ def make_bar(percent, length=20):
     bar = '█' * filled_length + '-' * (length - filled_length)
     
     return f"[{bar}]"
-
-# CPU Temperature
-def get_cpu_temp():
-    if get_os == 'Windows':
-        return None
-    elif get_os == 'Linux':
-        data = psutil.sensors_temperatures()
-        if not data:
-            return None
-        measures = next(iter(data.values()))
-        return measures[0].current
-    else:
-        return "N/A"
 
 # Processes fuction
 def get_top_proc():
@@ -139,12 +121,11 @@ def status():
     # CPU
     print(f"CPU       : {cpu_name}")
 
-    cpusage = psutil.cpu_percent()
+    cpusage = get_cpu_usage()
     cpu_bar = make_bar(cpusage)
     print(f"CPU Usage : {cpu_bar} {color_use(cpusage)}")
 
-    cpu_freq = psutil.cpu_freq().current / 1000
-    print(f"CPU Freq  : {cpu_freq:.1f} GHz")
+    print(f"CPU Freq  : {get_cpu_freq():.1f} GHz")
 
     temp = get_cpu_temp()
     if temp is not None:
