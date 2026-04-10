@@ -123,7 +123,7 @@ def status():
     global last_recv, last_sent
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
+    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}V1.0.1 ==={Fore.RESET}")
     print('')
 
     print(f"Machine name: {platform.node()}")
@@ -187,17 +187,28 @@ def status():
     print(Fore.BLUE + "---DISKS---" + Fore.RESET)
 
     # Disk
-    partitions = psutil.disk_partitions()
-    for p in partitions:
+    seen = set()
+    IGNORED_FS = {"tmpfs", "devtmpfs", "squashfs", "overlay"}
+
+    for p in psutil.disk_partitions():
+        if p.device in seen:
+            continue
+        seen.add(p.device)
+
+        if p.fstype in IGNORED_FS:
+            continue
+
         try:
             usage = psutil.disk_usage(p.mountpoint)
+
             free_text = f"{usage.free / (1024**3):.2f} GB"
             used_text = f"{usage.used / (1024**3):.2f} GB"
             
             colored_free = color_disk(free_text, usage.percent)
             colored_used = color_disk(used_text, usage.percent)
             
-            print(f"Disk {p.device} Free {colored_free} | Used {colored_used}")
+            print(f"Disk {p.mountpoint} Free {colored_free} | Used {colored_used}")
+
         except PermissionError:
             continue
 
