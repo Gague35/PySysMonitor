@@ -1,7 +1,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-1.0-orange)
+![Version](https://img.shields.io/badge/Version-1.0.1-orange)
 
 # 🖥️ PySysMonitor
 
@@ -13,6 +13,9 @@ A lightweight, real-time system resource monitor built in Python, displayed dire
 
 > ⚠️ Linux support is functional but may have minor bugs. Contributions welcome!
 
+| GUI (in progress) |
+|---|
+| ![Draft](Screenshots/GUI_draft.png) |
 ---
 
 ## 📊 Features
@@ -62,7 +65,10 @@ pip install gputil py-cpuinfo --break-system-packages
 ```bash
 python main.py
 ```
-
+or
+```bash
+python gui.py
+```
 Press `Ctrl+C` to exit.
 
 ---
@@ -84,14 +90,15 @@ Press `Ctrl+C` to exit.
 | [GPUtil](https://github.com/anderskm/gputil) | GPU monitoring (NVIDIA) |
 | [colorama](https://github.com/tartley/colorama) | Terminal colors |
 | [py-cpuinfo](https://github.com/workhorsy/py-cpuinfo) | CPU name detection |
+| [customtkinter](https://github.com/TomSchimansky/CustomTkinter) | GUI interface |
 
 ---
 
 ## 📅 Roadmap
 
 - [x] v1 — CLI monitor
-- [ ] v1.5 - Support for AMD GPUs (and attempt at macOS support) and many other features
-- [ ] v2 — Dedicated GUI application
+- [ ] v1.5 - Support for AMD GPUs (and attempt at macOS support) and many other features *(⚠️ may never be available because too difficult)*
+- [ ] v2 — Dedicated GUI application ***(🚧in progress🚧)***
 
 ## 📄 License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
