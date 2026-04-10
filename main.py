@@ -7,28 +7,11 @@ import time
 import datetime
 from colorama import Fore
 from core.cpu import get_cpu_temp, get_cpu_usage, get_cpu_freq, cpu_name, get_os, get_os_ver, cores
-
-
-last_recv = psutil.net_io_counters().bytes_recv
-last_sent = psutil.net_io_counters().bytes_sent
-
-def ping():
-    if get_os == 'Windows':
-        ping_res = subprocess.run(["ping", "-n", "1", "8.8.8.8"], capture_output=True, text=True, encoding="cp850")
-    elif get_os == 'Linux':
-        ping_res = subprocess.run(["ping", "-c", "1", "8.8.8.8"], capture_output=True, text=True)
-    else:
-        return "N/A"
-
-    txt = ping_res.stdout
-
-    for line in txt.splitlines():
-        # Fr/En
-        if "Moyenne =" in line or "Average =" in line:
-            fig = line.split("=")[-1].replace("ms", "").strip()
-            return fig
-
-    return "Error"
+from core.ram import get_ram, get_swap
+from core.gpu import get_gpus
+from core.disks import get_disks
+from core.network import get_network_speed, get_ping
+from core.processes import get_top_proc
 
 # Color functions
 def color_use(value):
@@ -63,42 +46,6 @@ def make_bar(percent, length=20):
     bar = '█' * filled_length + '-' * (length - filled_length)
     
     return f"[{bar}]"
-
-# Processes fuction
-def get_top_proc():
-    grouped = {}
-
-    psutil.cpu_percent(interval=None) 
-    
-    for proc in psutil.process_iter(['name', 'cpu_percent', 'memory_full_info']):
-        try:
-            if proc.info['memory_full_info'] is None:
-                continue
-            cpu = proc.info['cpu_percent']
-            name = proc.info['name']
-            ramMB = proc.info['memory_full_info'].uss // 1024**2
-
-            if name == "System Idle Process" or name is None:
-                continue
-                
-            if name in grouped:
-                grouped[name]['cpu'] += cpu
-                grouped[name]['ram'] += ramMB
-            else:
-                grouped[name] = {'name': name, 'cpu': cpu, 'ram': ramMB}
-
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
-    
-    for name in grouped:
-        grouped[name]['cpu'] = round(grouped[name]['cpu'] / cores, 2)
-
-    grp_proc = grouped.values()
-    proc_list = list(grp_proc)
-
-    top3_cpu = sorted(proc_list, key=lambda x: x['cpu'], reverse=True)[:3]
-    top3_ram = sorted(proc_list, key=lambda x: x['ram'], reverse=True)[:3]
-    return top3_cpu, top3_ram
 
 # Main function
 def status():
@@ -138,18 +85,18 @@ def status():
     print('')
     print(Fore.BLUE + "---RAM---" + Fore.RESET)
     # Memory 
-    ram = psutil.virtual_memory()
+    ram = get_ram()
     ram_bar = make_bar(ram.percent)
     print(f"RAM Usage : {ram_bar} {color_use(ram.percent)} {ram.used // 1024**2} MB / {ram.total // 1024**2} MB")
     
-    swram = psutil.swap_memory()
+    swram = get_swap()
     print(f"SWAP RAM  : {color_use(swram.percent)} ({swram.used // 1024**2} MB / {swram.total // 1024**2} MB)")
 
     print('')
     print(Fore.BLUE + "---GPU---" + Fore.RESET)
 
     # GPU
-    gpus = GPUtil.getGPUs()
+    gpus = get_gpus()
     if not gpus:
         print(Fore.RED + "GPU: No GPU detected")
     else:
@@ -168,46 +115,22 @@ def status():
     print(Fore.BLUE + "---DISKS---" + Fore.RESET)
 
     # Disk
-    seen = set()
-    IGNORED_FS = {"tmpfs", "devtmpfs", "squashfs", "overlay"}
+    for disks in get_disks():
+        colored_free = color_disk(disks['free'], disks['percent'])
+        colored_used = color_disk(disks['used'], disks['percent'])
+        print(f"Disk {disks['mountpoint']} Free {colored_free} GB | Used {colored_used} GB")
 
-    for p in psutil.disk_partitions():
-        if p.device in seen:
-            continue
-        seen.add(p.device)
-
-        if p.fstype in IGNORED_FS:
-            continue
-
-        try:
-            usage = psutil.disk_usage(p.mountpoint)
-
-            free_text = f"{usage.free / (1024**3):.2f} GB"
-            used_text = f"{usage.used / (1024**3):.2f} GB"
-            
-            colored_free = color_disk(free_text, usage.percent)
-            colored_used = color_disk(used_text, usage.percent)
-            
-            print(f"Disk {p.mountpoint} Free {colored_free} | Used {colored_used}")
-
-        except PermissionError:
-            continue
 
     print('')
     print(Fore.BLUE + "---NETWORK---" + Fore.RESET)
 
     # Network
-    actual = psutil.net_io_counters()
-    spd_dwnld = actual.bytes_recv - last_recv
-    spd_upld = actual.bytes_sent - last_sent
-    last_recv = actual.bytes_recv
-    last_sent = actual.bytes_sent
-    print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
-    print(f"Upload speed   : {spd_upld / (1024):.2f} kB/s")
-    ping_net = ping()
-    print(f"Ping           : {ping_net} ms")
+    net = get_network_speed()
+    print(f"Download: {net['download']} MB/s")
+    print(f"Upload: {net['upload']} MB/s")
 
-
+    ping = get_ping()
+    print(f"Ping : {ping} ms")
 
     print("")
     print(Fore.BLUE + "---TOP PROCESSES---" + Fore.RESET)
@@ -229,8 +152,6 @@ def status():
 
         print(f"{left_col:<40} | {right_col}")
         
-   # print("=====================")
-
 try:
     while True:
         status()
