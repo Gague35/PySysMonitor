@@ -102,7 +102,7 @@ def status():
     else:
         for gpu in gpus:
             print(f"GPU       : {gpu.name}")
-            gpu_use = gpu.load*100
+            gpu_use = round(gpu.load*100, 1)
             gpu_bar = make_bar(gpu_use)
             print(f"GPU Usage : {gpu_bar} {color_use(gpu_use)}")
             print(f"GPU Temp  : {color_temp(gpu.temperature)}")
