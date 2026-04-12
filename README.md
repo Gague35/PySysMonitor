@@ -38,7 +38,7 @@ A lightweight, real-time system resource monitor built in Python, displayed dire
 ```bash
 git clone https://github.com/Gague35/PySysMonitor.git
 cd PySysMonitor
-pip install psutil gputil colorama py-cpuinfo
+pip install psutil gputil colorama py-cpuinfo customtkinter
 ```
 
 ### Linux (Ubuntu/Debian)
@@ -46,7 +46,7 @@ pip install psutil gputil colorama py-cpuinfo
 ```bash
 git clone https://github.com/Gague35/PySysMonitor.git
 cd PySysMonitor
-pip install psutil gputil colorama py-cpuinfo
+pip install psutil gputil colorama py-cpuinfo customtkinter
 ```
 
 ### Linux (Arch/Manjaro)
@@ -55,7 +55,7 @@ pip install psutil gputil colorama py-cpuinfo
 
 ```bash
 sudo pacman -S python-psutil python-colorama
-pip install gputil py-cpuinfo --break-system-packages
+pip install gputil py-cpuinfo customtkinter --break-system-packages
 ```
 
 ---
