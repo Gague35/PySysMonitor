@@ -81,6 +81,19 @@ def color_disk(text, percent):
         color = Fore.CYAN
     return f"{color}{text}" + Fore.RESET
 
+def color_ping(value):
+    try:
+        val = float(value)
+    except:
+        return f"{Fore.YELLOW}{value} ms{Fore.RESET}"
+    if val > 200:
+        color = Fore.RED
+    elif val > 100:
+        color = Fore.YELLOW
+    else:
+        color = Fore.GREEN
+    return f"{color}{val} ms" + Fore.RESET
+
 
 # Bars
 def make_bar(percent, length=20):
@@ -260,12 +273,16 @@ def status():
     print(f"Download speed : {spd_dwnld / (1024):.2f} kB/s")
     print(f"Upload speed   : {spd_upld / (1024):.2f} kB/s")
     ping_net = ping()
-    print(f"Ping           : {ping_net} ms")
+    print(f"Ping           : {color_ping(ping_net)}")
 
 
 
     print("")
-    print(Fore.BLUE + "---TOP PROCESSES---" + Fore.RESET)
+    print(Fore.BLUE + "---PROCESSES---" + Fore.RESET)
+
+    # Total processes running
+    nb_proc = len(list(psutil.process_iter()))
+    print(f"Processes : {nb_proc}")
     
     # Inside status()
     cpu_list, ram_list = get_top_proc()
