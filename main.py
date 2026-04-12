@@ -155,8 +155,8 @@ def status():
 
     # Network
     net = get_network_speed()
-    print(f"Download: {net['download']} MB/s")
-    print(f"Upload: {net['upload']} MB/s")
+    print(f"Download: {net['download']} kB/s")
+    print(f"Upload: {net['upload']} kB/s")
 
     ping_net = get_ping()
     print(f"Ping : {color_ping(ping_net)}")
@@ -178,7 +178,7 @@ def status():
         left_col = f"{cpu_proc} : {cpu_val}"
 
         ram_name = r['name'][:15].ljust(15)
-        ram_val = f"{r['ram']} Mo"
+        ram_val = f"{r['ram']} MB"
         right_col = f"{ram_name} : {ram_val}"
 
         print(f"{left_col:<40} | {right_col}")
