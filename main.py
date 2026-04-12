@@ -9,7 +9,8 @@ from core.ram import get_ram, get_swap
 from core.gpu import get_gpus
 from core.disks import get_disks, disk_speeds
 from core.network import get_network_speed, get_ping
-from core.processes import get_top_proc
+from core.processes import get_top_proc, total_proc
+
 
 # Color functions
 def color_use(value):
@@ -37,6 +38,20 @@ def color_disk(text, percent):
         color = Fore.CYAN
     return f"{color}{text}" + Fore.RESET
 
+def color_ping(value):
+    try:
+        val = float(value)
+    except:
+        return f"{Fore.YELLOW}{value} ms{Fore.RESET}"
+    if val > 200:
+        color = Fore.RED
+    elif val > 100:
+        color = Fore.YELLOW
+    else:
+        color = Fore.GREEN
+    return f"{color}{val} ms" + Fore.RESET
+
+
 # Bars
 def make_bar(percent, length=20):
     filled_length = int(length * percent // 100)
@@ -44,6 +59,18 @@ def make_bar(percent, length=20):
     bar = '█' * filled_length + '-' * (length - filled_length)
     
     return f"[{bar}]"
+
+
+def format_uptime(uptime):
+    days = uptime.days
+    hours = uptime.seconds // 3600
+    minutes = (uptime.seconds % 3600) // 60
+    seconds = uptime.seconds % 60
+    if days > 0:
+        return f"{days}d {hours}h {minutes}m {seconds}s"
+    else:
+        return f"{hours}h {minutes}m {seconds}s"
+    
 
 # Main function
 def status():
@@ -55,10 +82,11 @@ def status():
 
     print(f"Machine name: {platform.node()}")
     print(f"Os : {get_os} {get_os_ver}")
+
     # Uptime
     boot_time = psutil.boot_time()
     uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
-    print(f"Uptime : {str(uptime).split('.')[0]}")
+    print(f"Uptime : {format_uptime(uptime)}")
     
     print('')
     print(Fore.BLUE + "---CPU---" + Fore.RESET)
@@ -130,12 +158,14 @@ def status():
     print(f"Download: {net['download']} MB/s")
     print(f"Upload: {net['upload']} MB/s")
 
-    ping = get_ping()
-    print(f"Ping : {ping} ms")
+    ping_net = get_ping()
+    print(f"Ping : {color_ping(ping_net)}")
 
     print("")
-    print(Fore.BLUE + "---TOP PROCESSES---" + Fore.RESET)
+    print(Fore.BLUE + "---PROCESSES---" + Fore.RESET)
     
+    print(f"Processes : {total_proc()}")
+
     # Inside status()
     cpu_list, ram_list = get_top_proc()
 

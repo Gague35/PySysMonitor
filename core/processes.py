@@ -1,6 +1,9 @@
 import psutil
 from core.cpu import cores
 
+def total_proc():
+    return len(list(psutil.process_iter()))
+
 def get_top_proc():
     grouped = {}
 
