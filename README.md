@@ -21,8 +21,8 @@ A lightweight, real-time system resource monitor built in Python, displayed dire
 - **CPU** — Name, usage, frequency
 - **RAM** — Physical and SWAP usage with progress bars
 - **GPU** — Usage, temperature and VRAM (NVIDIA only via GPUtil)
-- **Disks** — All detected partitions with free/used space
-- **Network** — Live download/upload speeds and ping
+- **Disks** — All detected partitions with free/used space and read/write speed
+- **Network** — Live download/upload speeds and ping (colored < 100 ms = GREEN, 100 <-> 200 ms = YELLOW, > 200 ms = RED)
 - **Top Processes** — Top 3 apps by CPU and RAM usage (grouped by application)
 - **CPU Temperature** — Linux only *(Windows blocks access to hardware sensors from Python)*
 
