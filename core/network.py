@@ -34,10 +34,16 @@ def ping_loop():
             continue
         
         txt = ping_res.stdout
+            
         for line in txt.splitlines():
+            # Windows Fr/En
             if "Moyenne =" in line or "Average =" in line:
                 fig = line.split("=")[-1].replace("ms", "").strip()
-                last_ping = fig
+                return fig
+            # Linux
+            if "rtt" in line or "round-trip" in line:
+                fig = round(float(line.split("/")[4].strip()), 1)
+                return fig
         
         time.sleep(5)
 

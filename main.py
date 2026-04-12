@@ -1,7 +1,5 @@
 import psutil
-import GPUtil
 import os
-import subprocess
 import platform
 import time
 import datetime
