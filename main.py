@@ -7,7 +7,7 @@ from colorama import Fore
 from core.cpu import get_cpu_temp, get_cpu_usage, get_cpu_freq, cpu_name, get_os, get_os_ver, cores
 from core.ram import get_ram, get_swap
 from core.gpu import get_gpus
-from core.disks import get_disks
+from core.disks import get_disks, disk_speeds
 from core.network import get_network_speed, get_ping
 from core.processes import get_top_proc
 
@@ -117,6 +117,9 @@ def status():
         colored_free = color_disk(disks['free'], disks['percent'])
         colored_used = color_disk(disks['used'], disks['percent'])
         print(f"Disk {disks['mountpoint']} Free {colored_free} GB | Used {colored_used} GB")
+    
+    spd_read, spd_write = disk_speeds()
+    print(f"Write : {spd_write / 1024:.2f} kB/s | Read : {spd_read / 1024:.2f} kB/s")
 
 
     print('')
