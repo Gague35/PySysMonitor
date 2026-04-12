@@ -12,10 +12,14 @@ from colorama import Fore
 last_recv = psutil.net_io_counters().bytes_recv
 last_sent = psutil.net_io_counters().bytes_sent
 
+last_read = psutil.disk_io_counters().read_bytes
+last_write = psutil.disk_io_counters().write_bytes
+
 get_os = platform.system()
 get_os_ver = (f'{platform.release()} | Version: {platform.version()}')
 cores = psutil.cpu_count()
 cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
+
 
 def ping():
     if get_os == 'Windows':
@@ -38,6 +42,7 @@ def ping():
             return fig
 
     return "Error"
+
 
 # Color functions
 def color_use(value):
@@ -65,6 +70,7 @@ def color_disk(text, percent):
         color = Fore.CYAN
     return f"{color}{text}" + Fore.RESET
 
+
 # Bars
 def make_bar(percent, length=20):
     filled_length = int(length * percent // 100)
@@ -72,6 +78,7 @@ def make_bar(percent, length=20):
     bar = '█' * filled_length + '-' * (length - filled_length)
     
     return f"[{bar}]"
+
 
 # CPU Temperature
 def get_cpu_temp():
@@ -85,8 +92,12 @@ def get_cpu_temp():
         return measures[0].current
     else:
         return "N/A"
+    
 
 # Processes fuction
+
+last_proc = ([], [])
+
 def get_top_proc():
     grouped = {}
 
@@ -122,12 +133,13 @@ def get_top_proc():
     top3_ram = sorted(proc_list, key=lambda x: x['ram'], reverse=True)[:3]
     return top3_cpu, top3_ram
 
+
 # Main function
 def status():
-    global last_recv, last_sent
+    global last_recv, last_sent, last_read, last_write
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}V1.0.1 ==={Fore.RESET}")
+    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
     print('')
 
     print(f"Machine name: {platform.node()}")
@@ -194,6 +206,13 @@ def status():
     seen = set()
     IGNORED_FS = {"tmpfs", "devtmpfs", "squashfs", "overlay"}
 
+    # Speeds
+    dskspd = psutil.disk_io_counters()
+    spd_read = dskspd.read_bytes - last_read
+    spd_write = dskspd.write_bytes - last_write
+    last_read = dskspd.read_bytes
+    last_write = dskspd.write_bytes
+
     for p in psutil.disk_partitions():
         if p.device in seen:
             continue
@@ -203,6 +222,7 @@ def status():
             continue
 
         try:
+            # Storage
             usage = psutil.disk_usage(p.mountpoint)
 
             free_text = f"{usage.free / (1024**3):.2f} GB"
@@ -210,11 +230,12 @@ def status():
             
             colored_free = color_disk(free_text, usage.percent)
             colored_used = color_disk(used_text, usage.percent)
-            
+
             print(f"Disk {p.mountpoint} Free {colored_free} | Used {colored_used}")
 
         except PermissionError:
             continue
+    print(f"Write : {spd_write / 1024:.2f} kB/s | Read : {spd_read / 1024:.2f} kB/s")
 
     print('')
     print(Fore.BLUE + "---NETWORK---" + Fore.RESET)
