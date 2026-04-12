@@ -44,6 +44,17 @@ def ping():
     return "Error"
 
 
+def format_uptime(uptime):
+    days = uptime.days
+    hours = uptime.seconds // 3600
+    minutes = (uptime.seconds % 3600) // 60
+    seconds = uptime.seconds % 60
+    if days > 0:
+        return f"{days}d {hours}h {minutes}m {seconds}s"
+    else:
+        return f"{hours}h {minutes}m {seconds}s"
+
+
 # Color functions
 def color_use(value):
     if value > 80:
@@ -95,7 +106,6 @@ def get_cpu_temp():
     
 
 # Processes fuction
-
 last_proc = ([], [])
 
 def get_top_proc():
@@ -144,10 +154,11 @@ def status():
 
     print(f"Machine name: {platform.node()}")
     print(f"Os : {get_os} {get_os_ver}")
+
     # Uptime
     boot_time = psutil.boot_time()
     uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
-    print(f"Uptime : {str(uptime).split('.')[0]}")
+    print(f"Uptime : {format_uptime(uptime)}")
     
     print('')
     print(Fore.BLUE + "---CPU---" + Fore.RESET)
