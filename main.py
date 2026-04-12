@@ -28,9 +28,13 @@ def ping():
     txt = ping_res.stdout
 
     for line in txt.splitlines():
-        # Fr/En
+        # Windows Fr/En
         if "Moyenne =" in line or "Average =" in line:
             fig = line.split("=")[-1].replace("ms", "").strip()
+            return fig
+        # Linux
+        if "rtt" in line or "round-trip" in line:
+            fig = round(float(line.split("/")[4].strip()), 1)
             return fig
 
     return "Error"
@@ -174,7 +178,7 @@ def status():
     else:
         for gpu in gpus:
             print(f"GPU       : {gpu.name}")
-            gpu_use = gpu.load*100
+            gpu_use = round(gpu.load * 100, 1)
             gpu_bar = make_bar(gpu_use)
             print(f"GPU Usage : {gpu_bar} {color_use(gpu_use)}")
             print(f"GPU Temp  : {color_temp(gpu.temperature)}")
