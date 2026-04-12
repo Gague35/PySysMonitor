@@ -1,7 +1,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-1.0.1-green)
+![Version](https://img.shields.io/badge/Version-1.0.2-green)
 
 # 🖥️ PySysMonitor
 
