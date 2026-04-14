@@ -77,7 +77,7 @@ def status():
     global last_recv, last_sent
     os.system('cls' if os.name == 'nt' else 'clear')
 
-    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}V1.0.1 ==={Fore.RESET}")
+    print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
     print('')
 
     print(f"Machine name: {platform.node()}")
@@ -147,7 +147,7 @@ def status():
         print(f"Disk {disks['mountpoint']} Free {colored_free} GB | Used {colored_used} GB")
     
     spd_read, spd_write = disk_speeds()
-    print(f"Write : {spd_write / 1024:.2f} kB/s | Read : {spd_read / 1024:.2f} kB/s")
+    print(f"Write : {spd_write} kB/s | Read : {spd_read} kB/s")
 
 
     print('')

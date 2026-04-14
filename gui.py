@@ -2,7 +2,7 @@ import customtkinter as ctk
 from core.cpu import get_cpu_usage, get_cpu_freq, get_cpu_temp, get_os
 from core.ram import get_ram, get_swap
 from core.gpu import get_gpus
-from core.disks import get_disks
+from core.disks import get_disks, disk_speeds
 from core.network import get_network_speed, get_ping
 from core.processes import get_top_proc
 
@@ -71,29 +71,29 @@ ctk.CTkLabel(ram_frame, text="--- RAM ---", text_color="#4DA6FF", font=FONT_TITL
 ctk.CTkLabel(gpu_frame, text="--- GPU ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=0, column=0, pady=5)
 
 # CPU
-cpu_usage_lab = ctk.CTkLabel(cpu_frame, text="Usage : 45%", anchor="center", font=FONT)
+cpu_usage_lab = ctk.CTkLabel(cpu_frame, text="Usage : ...%", anchor="center", font=FONT)
 cpu_usage_lab.grid(row=1, column=0, pady=2, padx=20, sticky="ew")
-cpu_freq_lab = ctk.CTkLabel(cpu_frame, text="Freq : 3.2 GHz", anchor="center", font=FONT)
+cpu_freq_lab = ctk.CTkLabel(cpu_frame, text="Freq : ... GHz", anchor="center", font=FONT)
 cpu_freq_lab.grid(row=3, column=0, pady=10, padx=20, sticky="ew")
-cpu_temp_lab = ctk.CTkLabel(cpu_frame, text="Temp : 65°C", anchor="center", font=FONT)
+cpu_temp_lab = ctk.CTkLabel(cpu_frame, text="Temp : ...°C", anchor="center", font=FONT)
 cpu_temp_lab.grid(row=4, column=0, pady=2, padx=20, sticky="ew")
 
 # RAM
-ram_usage_lab =ctk.CTkLabel(ram_frame, text="Usage : 60%", anchor="center", font=FONT)
+ram_usage_lab =ctk.CTkLabel(ram_frame, text="Usage : ...%", anchor="center", font=FONT)
 ram_usage_lab.grid(row=1, column=0, pady=2, padx=20, sticky="ew")
-ram_total_lab =ctk.CTkLabel(ram_frame, text="21354 MB / 32549 MB", anchor="center", font=FONT)
+ram_total_lab =ctk.CTkLabel(ram_frame, text="... MB / ... MB", anchor="center", font=FONT)
 ram_total_lab.grid(row=2, column=0, pady=0, padx=20, sticky="ew")
-swap_usage_lab = ctk.CTkLabel(ram_frame, text="SWAP : 10%", anchor="center", font=FONT)
+swap_usage_lab = ctk.CTkLabel(ram_frame, text="SWAP : ...%", anchor="center", font=FONT)
 swap_usage_lab.grid(row=4, column=0, pady=5, padx=20, sticky="ew")
-swap_total_lab = ctk.CTkLabel(ram_frame, text="984 MB / 8192 MB", anchor="center", font=FONT)
+swap_total_lab = ctk.CTkLabel(ram_frame, text="... MB / ... MB", anchor="center", font=FONT)
 swap_total_lab.grid(row=5, column=0, pady=0, padx=20, sticky="ew")
 
 # GPU
-gpu_usage_lab = ctk.CTkLabel(gpu_frame, text="Usage : 80%", anchor="center", font=FONT)
+gpu_usage_lab = ctk.CTkLabel(gpu_frame, text="Usage : ...%", anchor="center", font=FONT)
 gpu_usage_lab.grid(row=1, column=0, pady=2, padx=20, sticky="ew")
-gpu_temp_lab = ctk.CTkLabel(gpu_frame, text="Temp : 70°C", anchor="center", font=FONT)
+gpu_temp_lab = ctk.CTkLabel(gpu_frame, text="Temp : ...°C", anchor="center", font=FONT)
 gpu_temp_lab.grid(row=3, column=0, pady=10, padx=20, sticky="ew")
-vram_lab = ctk.CTkLabel(gpu_frame, text="VRAM : 50% | 4096 MB / 8192 MB", anchor="center", font=FONT)
+vram_lab = ctk.CTkLabel(gpu_frame, text="VRAM : ...% | ... MB / ... MB", anchor="center", font=FONT)
 vram_lab.grid(row=4, column=0, pady=2, padx=20, sticky="ew")
 
 # Frames ROW 2
@@ -112,13 +112,15 @@ ctk.CTkLabel(net_frame, text="--- Network ---", text_color="#4DA6FF", font=FONT_
 
 # Disk
 disk_labs = []
+disk_spds_lab = ctk.CTkLabel(disk_frame, text="Write : ... kB/s | Read : ... kB/s", anchor="center", font=FONT)
+disk_spds_lab.grid(row=5, column=0, pady=2, padx=20, sticky="ew")
 
 # Network
-net_download_lab = ctk.CTkLabel(net_frame, text="Download : 150.00 kB/s", anchor="center", font=FONT)
+net_download_lab = ctk.CTkLabel(net_frame, text="Download : ... kB/s", anchor="center", font=FONT)
 net_download_lab.grid(row=1, column=0, pady=2, padx=20, sticky="ew")
-net_upload_lab = ctk.CTkLabel(net_frame, text="Upload : 20.00 kB/s", anchor="center", font=FONT)
+net_upload_lab = ctk.CTkLabel(net_frame, text="Upload : ... kB/s", anchor="center", font=FONT)
 net_upload_lab.grid(row=2, column=0, pady=2, padx=20, sticky="ew")
-net_ping_lab = ctk.CTkLabel(net_frame, text="Ping : 12 ms", anchor="center", font=FONT)
+net_ping_lab = ctk.CTkLabel(net_frame, text="Ping : ... ms", anchor="center", font=FONT)
 net_ping_lab.grid(row=3, column=0, pady=2, padx=20, sticky="ew")
 
 # Frames ROW 3
@@ -192,6 +194,9 @@ def update():
         lab = ctk.CTkLabel(disk_frame, text=f"{disk['mountpoint']} — Free: {disk['free']} GB | Used: {disk['used']} GB", anchor="center", font=FONT)
         lab.grid(row=i+1, column=0, pady=2, padx=20, sticky="ew")
         disk_labs.append(lab)
+        
+    spd_read, spd_write = disk_speeds()
+    disk_spds_lab.configure(text=f"Write : {spd_write} kB/s | Read : {spd_read} kB/s")
 
     # Network
     net_speed = get_network_speed()

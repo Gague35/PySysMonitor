@@ -37,4 +37,4 @@ def disk_speeds():
     spd_write = dskspd.write_bytes - last_write
     last_read = dskspd.read_bytes
     last_write = dskspd.write_bytes
-    return spd_read, spd_write
+    return round(spd_read / 1024, 2), round(spd_write / 1024, 2)
