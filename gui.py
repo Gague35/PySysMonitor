@@ -6,7 +6,7 @@ from core.ram import get_ram, get_swap
 from core.gpu import get_gpus
 from core.disks import get_disks, disk_speeds
 from core.network import get_network_speed, get_ping
-from core.processes import get_top_proc
+from core.processes import get_top_proc, total_proc
 
 
 ctk.set_appearance_mode("dark")
@@ -50,7 +50,7 @@ machine_frame.grid_columnconfigure(1, weight=1)
 machine_frame.grid_columnconfigure(2, weight=1)
 name_lab = ctk.CTkLabel(machine_frame, text=f"Machine name : {machine_name}", font=FONT)
 name_lab.grid(row=0, column=0, pady=2, padx=20)
-os_lab = ctk.CTkLabel(machine_frame, text=f" OS : {get_os} | {get_os_ver}", font=FONT)
+os_lab = ctk.CTkLabel(machine_frame, text=f" OS : {get_os} {get_os_ver}", font=FONT)
 os_lab.grid(row=0, column=1, pady=2, padx=20)
 uptime_lab = ctk.CTkLabel(machine_frame, text="Uptime : ...", font=FONT)
 uptime_lab.grid(row=0, column=2, pady=2, padx=20)
@@ -146,10 +146,15 @@ processes_frame.grid(row=4, column=0, columnspan=3, padx=10, pady=10, sticky="ns
 
 processes_frame.grid_columnconfigure(0, weight=1)
 processes_frame.grid_columnconfigure(1, weight=1)
+processes_frame.grid_columnconfigure(2, weight=1)
 
 # Titles ROW 3
-ctk.CTkLabel(processes_frame, text="--- TOP CPU ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=0, column=0, pady=5)
-ctk.CTkLabel(processes_frame, text="--- TOP RAM ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=0, column=1, pady=5)
+ctk.CTkLabel(processes_frame, text="--- TOP CPU ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=1, column=0, pady=5)
+ctk.CTkLabel(processes_frame, text="--- TOP RAM ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=1, column=2, pady=5)
+
+# Total processes
+total_proc_lab = ctk.CTkLabel(processes_frame, text="Total processes : ...",anchor="center" , font=FONT)
+total_proc_lab.grid(row=0, column=1, pady=2, padx=10, sticky="ew")
 
 # TOP CPU
 cpu_proc_labs = []
@@ -162,7 +167,7 @@ for i in range(3):
 ram_proc_labs = []
 for i in range(3):
     lab = ctk.CTkLabel(processes_frame, text="...", anchor="center", font=FONT)
-    lab.grid(row=i+2, column=1, pady=2, padx=20, sticky="ew")
+    lab.grid(row=i+2, column=2, pady=2, padx=20, sticky="ew")
     ram_proc_labs.append(lab)
 
 
@@ -228,6 +233,9 @@ def update():
     net_ping_lab.configure(text=f"Ping : {net_ping} ms")
 
     # Processes
+    total = total_proc()
+    total_proc_lab.configure(text=f" Total processes : {total}")
+
     cpu_list, ram_list = get_top_proc()
     for i, proc in enumerate(cpu_list):
         cpu_proc_labs[i].configure(text=f"{proc['name']} : {proc['cpu']}%")
