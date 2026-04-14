@@ -143,11 +143,11 @@ def status():
 
     # Network
     net = get_network_speed()
-    print(f"Download: {net['download']} kB/s")
-    print(f"Upload: {net['upload']} kB/s")
+    print(f"Download speed : {net['download']} kB/s")
+    print(f"Upload spedd   : {net['upload']} kB/s")
 
     ping_net = get_ping()
-    print(f"Ping : {color_ping(ping_net)}")
+    print(f"Ping           : {color_ping(ping_net)}")
 
     print("")
     print(Fore.BLUE + "---PROCESSES---" + Fore.RESET)
