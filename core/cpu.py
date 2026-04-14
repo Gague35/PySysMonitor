@@ -4,8 +4,19 @@ import cpuinfo
 
 get_os = platform.system()
 get_os_ver = (f'{platform.release()} | Version: {platform.version()}')
+machine_name = platform.node()
 cores = psutil.cpu_count()
 cpu_name = cpuinfo.get_cpu_info()["brand_raw"]
+
+def format_uptime(uptime):
+    days = uptime.days
+    hours = uptime.seconds // 3600
+    minutes = (uptime.seconds % 3600) // 60
+    seconds = uptime.seconds % 60
+    if days > 0:
+        return f"{days}d {hours}h {minutes}m {seconds}s"
+    else:
+        return f"{hours}h {minutes}m {seconds}s"
 
 def get_cpu_temp():
     if get_os == 'Windows':

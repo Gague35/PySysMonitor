@@ -1,10 +1,9 @@
 import psutil
 import os
-import platform
 import time
 import datetime
 from colorama import Fore
-from core.cpu import get_cpu_temp, get_cpu_usage, get_cpu_freq, cpu_name, get_os, get_os_ver, cores
+from core.cpu import get_cpu_temp, get_cpu_usage, get_cpu_freq, format_uptime, cpu_name, get_os, get_os_ver, machine_name
 from core.ram import get_ram, get_swap
 from core.gpu import get_gpus
 from core.disks import get_disks, disk_speeds
@@ -61,17 +60,6 @@ def make_bar(percent, length=20):
     return f"[{bar}]"
 
 
-def format_uptime(uptime):
-    days = uptime.days
-    hours = uptime.seconds // 3600
-    minutes = (uptime.seconds % 3600) // 60
-    seconds = uptime.seconds % 60
-    if days > 0:
-        return f"{days}d {hours}h {minutes}m {seconds}s"
-    else:
-        return f"{hours}h {minutes}m {seconds}s"
-    
-
 # Main function
 def status():
     global last_recv, last_sent
@@ -80,7 +68,7 @@ def status():
     print(f"{Fore.BLUE}==={Fore.RESET}{Fore.YELLOW } Py{Fore.RESET}{Fore.CYAN}SysMonitor{Fore.RESET} {Fore.BLUE}==={Fore.RESET}")
     print('')
 
-    print(f"Machine name: {platform.node()}")
+    print(f"Machine name: {machine_name}")
     print(f"Os : {get_os} {get_os_ver}")
 
     # Uptime

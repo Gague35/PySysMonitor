@@ -15,7 +15,7 @@ A lightweight, real-time system resource monitor built in Python, displayed dire
 
 | GUI (in progress) |
 |---|
-| ![Draft](Screenshots/GUI_draft.png) |
+| ![Draft](Screenshots/GUI_beta2.png) |
 ---
 
 ## 📊 Features

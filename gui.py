@@ -1,24 +1,28 @@
 import customtkinter as ctk
-from core.cpu import get_cpu_usage, get_cpu_freq, get_cpu_temp, get_os
+import datetime
+import psutil
+from core.cpu import get_cpu_usage, get_cpu_freq, get_cpu_temp, format_uptime, get_os, get_os_ver, machine_name
 from core.ram import get_ram, get_swap
 from core.gpu import get_gpus
 from core.disks import get_disks, disk_speeds
 from core.network import get_network_speed, get_ping
 from core.processes import get_top_proc
 
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 app = ctk.CTk()
 app.title("PySysMonitor")
-app.geometry("1080x720")
+app.geometry("1080x800")
 app.resizable(False, False)
 app.grid_columnconfigure(0, weight=1)
 app.grid_columnconfigure(1, weight=1)
 app.grid_columnconfigure(2, weight=1)
-app.grid_rowconfigure(1, weight=1)
+app.grid_rowconfigure(1, weight=0)
 app.grid_rowconfigure(2, weight=1)
 app.grid_rowconfigure(3, weight=1)
+app.grid_rowconfigure(4, weight=1)
 
 FONT = ("Consolas", 15)
 FONT_TITLE = ("Trebuchet MS", 20, "bold")
@@ -38,22 +42,35 @@ title.pack(side="left")
 title2 = ctk.CTkLabel(inner, text="SysMonitor", font=FONT_HEADER, text_color="#00FFFF")
 title2.pack(side="left")
 
+# Machine
+machine_frame = ctk.CTkFrame(app, corner_radius=10, height=50)
+machine_frame.grid(row=1, column=0, columnspan=3, pady=10, padx=10, sticky="ew")
+machine_frame.grid_columnconfigure(0, weight=1)
+machine_frame.grid_columnconfigure(1, weight=1)
+machine_frame.grid_columnconfigure(2, weight=1)
+name_lab = ctk.CTkLabel(machine_frame, text=f"Machine name : {machine_name}", font=FONT)
+name_lab.grid(row=0, column=0, pady=2, padx=20)
+os_lab = ctk.CTkLabel(machine_frame, text=f" OS : {get_os} | {get_os_ver}", font=FONT)
+os_lab.grid(row=0, column=1, pady=2, padx=20)
+uptime_lab = ctk.CTkLabel(machine_frame, text="Uptime : ...", font=FONT)
+uptime_lab.grid(row=0, column=2, pady=2, padx=20)
+
 # Frames ROW 1
 cpu_frame = ctk.CTkFrame(app, corner_radius=10)
-cpu_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+cpu_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 cpu_bar = ctk.CTkProgressBar(cpu_frame, corner_radius=10, width=50, height=10, progress_color="#4DA6FF")
 cpu_bar.grid(row=2, column=0, pady=2, padx=20, sticky="ew")
 cpu_bar.set(0.45)
 
 ram_frame = ctk.CTkFrame(app, corner_radius=10)
-ram_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+ram_frame.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 ram_bar = ctk.CTkProgressBar(ram_frame, corner_radius=10, width=50, height=10, progress_color="#4DA6FF")
 ram_bar.grid(row=3, column=0, pady=2, padx=20, sticky="ew")
 ram_bar.set(0.60)
 
 
 gpu_frame = ctk.CTkFrame(app, corner_radius=10)
-gpu_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
+gpu_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
 gpu_bar = ctk.CTkProgressBar(gpu_frame, corner_radius=10, width=50, height=10, progress_color="#4DA6FF")
 gpu_bar.grid(row=2, column=0, pady=2, padx=20, sticky="ew")
 gpu_bar.set(0.80)
@@ -98,10 +115,10 @@ vram_lab.grid(row=4, column=0, pady=2, padx=20, sticky="ew")
 
 # Frames ROW 2
 disk_frame = ctk.CTkFrame(app, corner_radius=10)
-disk_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+disk_frame.grid(row=3, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
 net_frame = ctk.CTkFrame(app, corner_radius=10)
-net_frame.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
+net_frame.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
 
 disk_frame.grid_columnconfigure(0, weight=1)
 net_frame.grid_columnconfigure(0, weight=1)
@@ -125,7 +142,7 @@ net_ping_lab.grid(row=3, column=0, pady=2, padx=20, sticky="ew")
 
 # Frames ROW 3
 processes_frame = ctk.CTkFrame(app, corner_radius=10)
-processes_frame.grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="nsew")
+processes_frame.grid(row=4, column=0, columnspan=3, padx=10, pady=10, sticky="nsew")
 
 processes_frame.grid_columnconfigure(0, weight=1)
 processes_frame.grid_columnconfigure(1, weight=1)
@@ -150,6 +167,11 @@ for i in range(3):
 
 
 def update():
+    # Machine
+    boot_time = psutil.boot_time()
+    uptime = datetime.datetime.now() - datetime.datetime.fromtimestamp(boot_time)
+    uptime_lab.configure(text=f"Uptime : {format_uptime(uptime)}")
+
     # CPU
     cpu_usage = get_cpu_usage()
     cpu_usage_lab.configure(text=f"Usage : {cpu_usage}%")
