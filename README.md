@@ -1,7 +1,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-2.0.0--beta.2-orange)
+![Version](https://img.shields.io/badge/Version-2.0.0--beta.3-orange)
 
 # 🖥️ PySysMonitor
 
@@ -15,7 +15,7 @@ A lightweight, real-time system resource monitor built in Python, displayed dire
 
 | GUI (in progress) |
 |---|
-| ![Draft](Screenshots/GUI_beta2.png) |
+| ![Draft](Screenshots/GUI_beta3.png) |
 ---
 
 ## 📊 Features

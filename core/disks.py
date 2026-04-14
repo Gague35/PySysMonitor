@@ -21,8 +21,8 @@ def get_disks():
 
             disks.append({
                 'mountpoint': p.mountpoint,
-                'free': round(usage.free / (1024**3), 2),
-                'used': round(usage.used / (1024**3), 2),
+                'free': round(usage.free / (1024**3), 1),
+                'used': round(usage.used / (1024**3), 1),
                 'percent': usage.percent
             })
 

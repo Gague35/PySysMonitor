@@ -171,6 +171,43 @@ for i in range(3):
     ram_proc_labs.append(lab)
 
 
+# Color functions
+def color_use(value):
+    if value > 80:
+        return "#ff4d4d"
+    elif value > 50:
+        return "#ffa500"
+    else:
+        return "#4CAF50"
+    
+def color_temp(value):
+    if value > 90:
+        return "#ff4d4d"
+    elif value > 70:
+        return "#ffa500"
+    else:
+        return "#4CAF50"
+    
+def color_disk(value):
+    if value > 90:
+        return "#DD2929"
+    else:
+        return "#2977DD"
+    
+def color_ping(value):
+    try:
+        val = float(value)
+    except:
+        return "#ffee00"
+
+    if val > 200:
+        return "#ff4d4d"
+    elif val > 100:
+        return "#ffa500"
+    else:
+        return "#4CAF50"
+
+
 def update():
     # Machine
     boot_time = psutil.boot_time()
@@ -179,37 +216,41 @@ def update():
 
     # CPU
     cpu_usage = get_cpu_usage()
-    cpu_usage_lab.configure(text=f"Usage : {cpu_usage}%")
+    cpu_usage_lab.configure(text=f"Usage : {cpu_usage}%", text_color=color_use(cpu_usage))
+    cpu_bar.configure(progress_color=color_use(cpu_usage))
     cpu_bar.set(cpu_usage / 100)
     cpu_freq = get_cpu_freq()
     cpu_freq_lab.configure(text=f" Freq : {cpu_freq} GHz")
     cpu_temp = get_cpu_temp()
     if cpu_temp is not None:
-        cpu_temp_lab.configure(text=f"Temp : {cpu_temp}°C")
+        cpu_temp_lab.configure(text=f"Temp : {color_temp(cpu_temp)}°C")
     elif get_os == 'Windows':
-        cpu_temp_lab.configure(text="Temp : N/A (Windows)")
+        cpu_temp_lab.configure(text="Temp : N/A (Windows)", text_color="#ffd900")
     else:
         cpu_temp_lab.configure(text="Temp : N/A")
     
     # RAM
     ram_usage = get_ram()
-    ram_usage_lab.configure(text=f"Usage : {ram_usage.percent}%")
+    ram_usage_lab.configure(text=f"Usage : {ram_usage.percent}%", text_color=color_use(ram_usage.percent))
     ram_total_lab.configure(text=f"{ram_usage.used / (1024**2):.0f} MB / {ram_usage.total / (1024**2):.0f} MB")
+    ram_bar.configure(progress_color=color_use(ram_usage.percent))
     ram_bar.set(ram_usage.percent / 100)
     # SWAP 
     swap_usage = get_swap()
-    swap_usage_lab.configure(text=f"SWAP : {swap_usage.percent}%")
+    swap_usage_lab.configure(text=f"SWAP : {swap_usage.percent}%", text_color=color_use(swap_usage.percent))
     swap_total_lab.configure(text=f"{swap_usage.used / (1024**2):.0f} MB / {swap_usage.total / (1024**2):.0f}")
 
     # GPU
     gpu_usage = get_gpus()
     if gpu_usage:
         gpu_usage = gpu_usage[0]
-        gpu_usage_lab.configure(text=f"Usage : {round(gpu_usage.load*100, 1)}%")
+        gpu_usage_lab.configure(text=f"Usage : {round(gpu_usage.load*100, 1)}%", text_color=color_use(gpu_usage.load*100))
+        gpu_bar.configure(progress_color=color_use(gpu_usage.load*100))
         gpu_bar.set(gpu_usage.load)
-        gpu_temp_lab.configure(text=f"Temp : {gpu_usage.temperature}°C")
+        gpu_temp_lab.configure(text=f"Temp : {gpu_usage.temperature}°C", text_color=color_temp(gpu_usage.temperature))
         vram_percent = round((gpu_usage.memoryUsed / gpu_usage.memoryTotal) * 100, 1)
-        vram_lab.configure(text=f"VRAM : {vram_percent}% | {gpu_usage.memoryUsed:.0f} MB / {gpu_usage.memoryTotal:.0f} MB")
+        vram_lab.configure(text=f"VRAM : {vram_percent}% | {gpu_usage.memoryUsed:.0f} MB / {gpu_usage.memoryTotal:.0f} MB", text_color=color_use(vram_percent))
+        vram_bar.configure(progress_color=color_use(vram_percent))
         vram_bar.set(vram_percent / 100)
 
     # Disks
@@ -218,7 +259,7 @@ def update():
     disk_labs.clear()
 
     for i, disk in enumerate(get_disks()):
-        lab = ctk.CTkLabel(disk_frame, text=f"{disk['mountpoint']} — Free: {disk['free']} GB | Used: {disk['used']} GB", anchor="center", font=FONT)
+        lab = ctk.CTkLabel(disk_frame, text=f"{disk['mountpoint']} — Free: {disk['free']} GB | Used: {disk['used']} GB", anchor="center", font=FONT, text_color=color_disk(disk['percent']))
         lab.grid(row=i+1, column=0, pady=2, padx=20, sticky="ew")
         disk_labs.append(lab)
         
@@ -230,7 +271,7 @@ def update():
     net_download_lab.configure(text=f"Download : {net_speed['download']} kB/s")
     net_upload_lab.configure(text=f"Upload : {net_speed['upload']} kB/s")
     net_ping = get_ping()
-    net_ping_lab.configure(text=f"Ping : {net_ping} ms")
+    net_ping_lab.configure(text=f"Ping : {net_ping} ms", text_color=color_ping(net_ping))
 
     # Processes
     total = total_proc()
