@@ -146,15 +146,14 @@ processes_frame.grid(row=4, column=0, columnspan=3, padx=10, pady=10, sticky="ns
 
 processes_frame.grid_columnconfigure(0, weight=1)
 processes_frame.grid_columnconfigure(1, weight=1)
-processes_frame.grid_columnconfigure(2, weight=1)
 
 # Titles ROW 3
 ctk.CTkLabel(processes_frame, text="--- TOP CPU ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=1, column=0, pady=5)
-ctk.CTkLabel(processes_frame, text="--- TOP RAM ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=1, column=2, pady=5)
+ctk.CTkLabel(processes_frame, text="--- TOP RAM ---", text_color="#4DA6FF", font=FONT_TITLE).grid(row=1, column=1, pady=5)
 
 # Total processes
 total_proc_lab = ctk.CTkLabel(processes_frame, text="Total processes : ...",anchor="center" , font=FONT)
-total_proc_lab.grid(row=0, column=1, pady=2, padx=10, sticky="ew")
+total_proc_lab.grid(row=0, column=0, columnspan=2, pady=2, padx=10, sticky="ew")
 
 # TOP CPU
 cpu_proc_labs = []
@@ -167,7 +166,7 @@ for i in range(3):
 ram_proc_labs = []
 for i in range(3):
     lab = ctk.CTkLabel(processes_frame, text="...", anchor="center", font=FONT)
-    lab.grid(row=i+2, column=2, pady=2, padx=20, sticky="ew")
+    lab.grid(row=i+2, column=1, pady=2, padx=20, sticky="ew")
     ram_proc_labs.append(lab)
 
 
